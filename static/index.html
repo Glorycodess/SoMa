@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>African Language Translator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f7f5f2;
+            color: #2d2d2d;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 540px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            padding: 32px 28px 24px 28px;
+        }
+        h1 {
+            color: #2b4a2f;
+            margin-bottom: 18px;
+            font-weight: 700;
+        }
+        label {
+            display: block;
+            margin: 14px 0 6px 0;
+            font-weight: 500;
+        }
+        textarea, select, input[type="file"] {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid #d1cfc7;
+            padding: 10px;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            background: #f9f7f3;
+        }
+        button {
+            background: #f4b942;
+            color: #2d2d2d;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #e09e36;
+        }
+        .result {
+            margin-top: 24px;
+            background: #e6f2e6;
+            border-radius: 10px;
+            padding: 16px;
+            min-height: 60px;
+            font-size: 1.1rem;
+        }
+        .error {
+            color: #b00020;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>African Language Translator</h1>
+        <form id="translateForm">
+            <label for="text">Enter English Text</label>
+            <textarea id="text" name="text" rows="5" placeholder="Type your English text here..."></textarea>
+            <label for="file">Or Upload PDF</label>
+            <input type="file" id="file" name="file" accept="application/pdf">
+            <label for="language">Target Language</label>
+            <select id="language" name="language">
+                <option value="hau_Latn">Hausa</option>
+                <option value="yor_Latn">Yoruba</option>
+                <option value="ibo_Latn">Igbo</option>
+                <option value="swh_Latn">Swahili</option>
+                <option value="kin_Latn">Kinyarwanda</option>
+            </select>
+            <button type="submit">Translate</button>
+        </form>
+        <div class="result" id="translatedText"></div>
+        <div class="error" id="errorMsg"></div>
+    </div>
+    <script>
+    // Handle form submission and call Flask API
+    document.getElementById('translateForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        document.getElementById('translatedText').textContent = '';
+        document.getElementById('errorMsg').textContent = '';
+        const text = document.getElementById('text').value.trim();
+        const file = document.getElementById('file').files[0];
+        const target_language = document.getElementById('language').value;
+        if (!text && !file) {
+            document.getElementById('errorMsg').textContent = 'Please enter text or upload a PDF.';
+            return;
+        }
+        try {
+            let response, data;
+            if (file) {
+                // PDF upload
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('target_language', target_language);
+                response = await fetch('/translate-pdf', {
+                    method: 'POST',
+                    body: formData
+                });
+            } else {
+                // Text translation
+                response = await fetch('/translate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, target_language })
+                });
+            }
+            data = await response.json();
+            if (response.ok) {
+                document.getElementById('translatedText').textContent = data.translated_text;
+            } else {
+                document.getElementById('errorMsg').textContent = data.error || 'Translation failed.';
+            }
+        } catch (err) {
+            document.getElementById('errorMsg').textContent = 'Error connecting to server.';
+        }
+    });
+    </script>
+</body>
+</html> 

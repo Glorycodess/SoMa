@@ -1,0 +1,6 @@
+Flask
+flask-cors
+transformers
+torch
+PyPDF2
+# If running on GPU, ensure CUDA is available and install torch with CUDA support 
