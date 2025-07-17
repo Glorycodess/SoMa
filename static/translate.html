@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Translate Book - SoMa</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-screen">
+  <header class="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center">
+          <a href="/static/index.html" class="text-2xl font-bold text-gray-900 hover:text-blue-600 transition">SoMa</a>
+          <span class="ml-2 text-sm text-gray-500">African Language Translation</span>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center space-x-2 bg-gray-100 rounded-lg p-1">
+            <button id="lightTheme" class="px-3 py-1 rounded-md text-sm font-medium bg-white text-gray-900 shadow">Light</button>
+            <button id="darkTheme" class="px-3 py-1 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900">Dark</button>
+            <button id="parchmentTheme" class="px-3 py-1 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900">Parchment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Upload Section -->
+    <div id="uploadSection" class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200 p-8 mb-8">
+      <h2 class="text-3xl font-bold text-gray-900 mb-6">Upload & Translate</h2>
+      
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- File Upload -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-3">Upload PDF Book</label>
+          <div id="dropzone" class="dropzone flex flex-col items-center justify-center bg-blue-50 border-2 border-dashed border-blue-200 rounded-xl py-12 px-4 transition cursor-pointer hover:border-blue-400 hover:bg-blue-100">
+            <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+            </svg>
+            <p class="text-gray-700 font-medium mb-2 text-lg">Drop your PDF here or click to browse</p>
+            <p class="text-gray-400 text-sm mb-4">Support for PDF files up to 50MB</p>
+            <input id="fileInput" type="file" accept=".pdf" class="hidden" />
+            <button type="button" id="chooseFileBtn" class="px-6 py-3 bg-white border border-gray-300 rounded-lg shadow text-gray-700 hover:bg-blue-50 transition font-medium">Choose File</button>
+            <div id="fileName" class="mt-4 text-sm text-gray-500"></div>
+          </div>
+        </div>
+
+        <!-- Language Selection -->
+        <div>
+          <label for="targetLanguage" class="block text-sm font-medium text-gray-700 mb-3">Target Language</label>
+          <select id="targetLanguage" class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition text-lg">
+            <option value="">Select language</option>
+            <option value="hau_Latn">🇳🇬 Hausa (Nigeria)</option>
+            <option value="yor_Latn">🇳🇬 Yoruba (Nigeria)</option>
+            <option value="ibo_Latn">🇳🇬 Igbo (Nigeria)</option>
+            <option value="swh_Latn">🇹🇿 Swahili (East Africa)</option>
+            <option value="kin_Latn">🇷🇼 Kinyarwanda (Rwanda)</option>
+          </select>
+          
+          <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+            <h4 class="font-semibold text-blue-900 mb-2">Translation Status</h4>
+            <div id="translationStatus" class="text-sm text-blue-700">
+              Ready to translate. Upload a PDF and select a language to begin.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Translate Button -->
+      <div class="mt-8 text-center">
+        <button id="translateBtn" class="bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition-all duration-300 shadow-lg transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none" disabled>
+          📚 Translate Book
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection" class="hidden">
+      <!-- View Toggle -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center space-x-4">
+          <span class="text-sm font-medium text-gray-700">View Mode:</span>
+          <div class="flex items-center space-x-2 bg-gray-100 rounded-lg p-1">
+            <button id="sideBySideBtn" class="px-3 py-1 rounded-md text-sm font-medium bg-blue-600 text-white">Side by Side</button>
+            <button id="inlineBtn" class="px-3 py-1 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900">Inline</button>
+            <button id="audioBtn" class="px-3 py-1 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900">Audio Mode</button>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <span class="text-sm text-gray-600">
+            Language: <span id="selectedLanguage" class="font-medium"></span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Reading Content -->
+      <div id="readingContainer" class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+        <!-- Side by Side View (Default) -->
+        <div id="sideBySideView" class="flex">
+          <div class="flex-1 border-r border-gray-200">
+            <div class="p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Original Text</h3>
+              <div id="originalText" class="prose max-w-none text-gray-800 leading-relaxed whitespace-pre-line"></div>
+            </div>
+          </div>
+          <div class="flex-1">
+            <div class="p-6">
+              <h3 id="translatedHeader" class="text-lg font-semibold text-gray-900 mb-4">Translated Text</h3>
+              <div id="translatedText" class="prose max-w-none text-gray-800 leading-relaxed whitespace-pre-line"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inline View -->
+        <div id="inlineView" class="hidden">
+          <div class="p-6">
+            <div id="inlineContent" class="prose max-w-none text-gray-800 leading-relaxed"></div>
+          </div>
+        </div>
+
+        <!-- Audio View -->
+        <div id="audioView" class="hidden">
+          <div class="p-6">
+            <h3 id="audioHeader" class="text-lg font-semibold text-gray-900 mb-4">Audio Reading Mode</h3>
+            
+            <!-- Audio Player -->
+            <div id="audioPlayerContainer" class="mb-6 bg-gray-50 rounded-lg p-4">
+              <div class="flex items-center space-x-4 mb-4">
+                <button id="playPauseBtn" class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
+                  <svg id="playIcon" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                  <svg id="pauseIcon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                  </svg>
+                </button>
+                
+                <div class="flex-1">
+                  <div class="flex items-center justify-between text-sm text-gray-600 mb-1">
+                    <span id="currentTime">0:00</span>
+                    <span id="totalTime">0:00</span>
+                  </div>
+                  <div class="relative">
+                    <input id="progressBar" type="range" min="0" max="100" value="0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+                    <div id="progressFill" class="absolute top-0 left-0 h-2 bg-blue-600 rounded-lg" style="width: 0%"></div>
+                  </div>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                  <button id="rewindBtn" class="p-2 text-gray-600 hover:text-gray-900 transition-colors" title="Rewind 10 seconds">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.334 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8l-5.334 4z"/>
+                    </svg>
+                  </button>
+                  <button id="forwardBtn" class="p-2 text-gray-600 hover:text-gray-900 transition-colors" title="Forward 10 seconds">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.334-4zM19.933 12.8a1 1 0 000-1.6L14.6 7.2A1 1 0 0013 8v8a1 1 0 001.6.8l5.334-4z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Hidden audio element -->
+              <audio id="audioElement" preload="metadata"></audio>
+            </div>
+            
+            <!-- Translated Text in Audio Mode -->
+            <div id="audioText" class="prose max-w-none text-gray-800 leading-relaxed whitespace-pre-line"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div id="paginationControls" class="mt-6 flex items-center justify-center space-x-4">
+        <button id="prevPageBtn" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-100" disabled>
+          <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Previous
+        </button>
+        
+        <div class="flex items-center space-x-2">
+          <span class="text-sm text-gray-600">Page</span>
+          <span id="currentPage" class="text-lg font-semibold text-gray-900">1</span>
+          <span class="text-sm text-gray-600">of</span>
+          <span id="totalPages" class="text-lg font-semibold text-gray-900">1</span>
+        </div>
+        
+        <button id="nextPageBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600" disabled>
+          Next
+          <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+      <div class="bg-white rounded-lg p-8 text-center max-w-md mx-4">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Translating Your Book</h3>
+        <p class="text-gray-600">This may take a few minutes depending on the file size...</p>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="/static/translate.js"></script>
+</body>
+</html> 

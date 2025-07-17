@@ -1,87 +1,63 @@
-import os
+import re
+import requests
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
-import threading
 import PyPDF2
+from google.cloud import texttospeech
+import base64
 
 # -----------------------------
-# Supported African languages and codes (NLLB-200)
+# CONFIGURATION
+
+GOOGLE_API_KEY = "AIzaSyCTuGy5wApbEazXrAcDv75waU7wCjGwfQs"
+
 SUPPORTED_LANGUAGES = {
-    'Hausa': 'hau_Latn',
-    'Yoruba': 'yor_Latn',
-    'Igbo': 'ibo_Latn',
-    'Swahili': 'swh_Latn',
-    'Kinyarwanda': 'kin_Latn',
+    'hau_Latn': 'ha',  # Hausa
+    'yor_Latn': 'yo',  # Yoruba
+    'ibo_Latn': 'ig',  # Igbo
+    'swh_Latn': 'sw',  # Swahili
+    'kin_Latn': 'rw',  # Kinyarwanda
 }
 
 # -----------------------------
-# Efficient model/tokenizer loading with thread-safe singleton
-class NLLBModel:
-    _instance = None
-    _lock = threading.Lock()
-
-    def __init__(self):
-        self.model_name = "facebook/nllb-200-distilled-600M"
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-        self.model = AutoModelForSeq2SeqLM.from_pretrained(self.model_name)
-
-    @classmethod
-    def get_instance(cls):
-        if cls._instance is None:
-            with cls._lock:
-                if cls._instance is None:
-                    cls._instance = cls()
-        return cls._instance
-
-# -----------------------------
-# Helper: Validate language code
+# HELPER FUNCTIONS
 
 def is_supported_language_code(lang_code):
-    return lang_code in SUPPORTED_LANGUAGES.values()
+    return lang_code in SUPPORTED_LANGUAGES
 
-def get_language_name_from_code(lang_code):
-    for name, code in SUPPORTED_LANGUAGES.items():
-        if code == lang_code:
-            return name
+def get_language_code(lang_key):
+    return SUPPORTED_LANGUAGES.get(lang_key)
+
+def get_language_key_from_code(code):
+    for key, val in SUPPORTED_LANGUAGES.items():
+        if val == code:
+            return key
     return None
 
-# -----------------------------
-# Helper to split long text
+def clean_translated_text(text):
+    text = re.sub(r'\s+', ' ', text)
+    text = re.sub(r' \n ', '\n', text)
+    return text.strip()
 
-def split_text_into_chunks(text, max_words=200):
-    words = text.split()
-    return [' '.join(words[i:i+max_words]) for i in range(0, len(words), max_words)]
-
-# -----------------------------
-# Translation function (handles chunking and lang code fix)
-
-def translate(text, target_language_code):
-    if not is_supported_language_code(target_language_code):
+def translate_text(text, target_language_code):
+    if not GOOGLE_API_KEY:
+        raise Exception("Google API key not set.")
+    if target_language_code not in SUPPORTED_LANGUAGES.values():
         raise ValueError(f"Unsupported language code: {target_language_code}")
 
-    nllb = NLLBModel.get_instance()
-    tokenizer = nllb.tokenizer
-    model = nllb.model
+    url = f"https://translation.googleapis.com/language/translate/v2?key={GOOGLE_API_KEY}"
+    data = {
+        "q": text,
+        "target": target_language_code,
+        "format": "text"
+    }
 
-    chunks = split_text_into_chunks(text, max_words=200)
-    translations = []
+    response = requests.post(url, json=data)
+    if response.status_code != 200:
+        raise Exception(f"Google Translate API error: {response.text}")
 
-    for chunk in chunks:
-        inputs = tokenizer(chunk, return_tensors="pt", truncation=True, max_length=1000)
-        forced_bos_token_id = tokenizer.convert_tokens_to_ids(target_language_code)
-        output_tokens = model.generate(
-            **inputs,
-            forced_bos_token_id=forced_bos_token_id,
-            max_length=512
-        )
-        translated_chunk = tokenizer.batch_decode(output_tokens, skip_special_tokens=True)[0]
-        translations.append(translated_chunk)
-
-    return ' '.join(translations)
-
-# -----------------------------
-# PDF text extraction helper
+    result = response.json()
+    return result['data']['translations'][0]['translatedText']
 
 def extract_text_from_pdf(file_stream):
     reader = PyPDF2.PdfReader(file_stream)
@@ -92,11 +68,33 @@ def extract_text_from_pdf(file_stream):
             text += page_text + '\n'
     return text.strip()
 
+def synthesize_speech(text, language_code="en-US"):
+    client = texttospeech.TextToSpeechClient()
+
+    input_text = texttospeech.SynthesisInput(text=text)
+    voice = texttospeech.VoiceSelectionParams(
+        language_code=language_code,
+        ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+    )
+    audio_config = texttospeech.AudioConfig(
+        audio_encoding=texttospeech.AudioEncoding.MP3
+    )
+
+    response = client.synthesize_speech(
+        input=input_text,
+        voice=voice,
+        audio_config=audio_config
+    )
+    return response.audio_content
+
 # -----------------------------
-# Flask API setup
+# FLASK APP SETUP
 
 app = Flask(__name__, static_folder='static')
 CORS(app)
+
+# -----------------------------
+# ROUTES
 
 @app.route('/')
 def serve_index():
@@ -109,59 +107,86 @@ def translate_api():
         return jsonify({'error': 'Missing "text" or "target_language" in request.'}), 400
 
     text = data['text']
-    target_language = data['target_language']
+    lang_input = data['target_language']
+    target_language_code = get_language_code(lang_input)
 
-    if target_language in SUPPORTED_LANGUAGES:
-        target_language_code = SUPPORTED_LANGUAGES[target_language]
-    else:
-        target_language_code = target_language
-
-    if not is_supported_language_code(target_language_code):
+    if not target_language_code:
         return jsonify({'error': f'Unsupported language. Supported: {list(SUPPORTED_LANGUAGES.keys())}'}), 400
 
     try:
-        translated = translate(text, target_language_code)
-        return jsonify({
-            'translated_text': translated,
-            'target_language': get_language_name_from_code(target_language_code) or target_language_code
-        })
+        translated = translate_text(text, target_language_code)
+        cleaned = clean_translated_text(translated)
+        return jsonify({'translated_text': cleaned, 'target_language': lang_input})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 @app.route('/translate-pdf', methods=['POST'])
-def translate_pdf_api():
-    if 'file' not in request.files or 'target_language' not in request.form:
-        return jsonify({'error': 'Missing PDF file or target_language.'}), 400
-
-    file = request.files['file']
-    target_language = request.form['target_language']
-
-    if target_language in SUPPORTED_LANGUAGES:
-        target_language_code = SUPPORTED_LANGUAGES[target_language]
-    else:
-        target_language_code = target_language
-
-    if not is_supported_language_code(target_language_code):
-        return jsonify({'error': f'Unsupported language. Supported: {list(SUPPORTED_LANGUAGES.keys())}'}), 400
-
+def translate_pdf():
     try:
-        text = extract_text_from_pdf(file)
-        if not text:
-            return jsonify({'error': 'No extractable text found in PDF.'}), 400
+        file = request.files.get('file')
+        target_language = request.form.get('target_language')
 
-        translated = translate(text, target_language_code)
-        return jsonify({
-            'translated_text': translated,
-            'target_language': get_language_name_from_code(target_language_code) or target_language_code
-        })
+        if not file or file.filename == '':
+            return jsonify({'error': 'No PDF file uploaded.'}), 400
+        if not target_language:
+            return jsonify({'error': 'No target language specified.'}), 400
+        if target_language not in SUPPORTED_LANGUAGES:
+            return jsonify({'error': f'Unsupported language. Supported: {list(SUPPORTED_LANGUAGES.keys())}'}), 400
+
+        target_language_code = get_language_code(target_language)
+        if not target_language_code:
+            return jsonify({'error': 'Could not map target language to Google Translate code.'}), 400
+
+        extracted_text = extract_text_from_pdf(file.stream)
+        if not extracted_text:
+            return jsonify({'translated_text': '[No text found in PDF]', 'target_language': target_language})
+
+        translated_text = translate_text(extracted_text, target_language_code)
+        cleaned_text = clean_translated_text(translated_text)
+
+        return jsonify({'translated_text': cleaned_text, 'target_language': target_language})
+
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        print(f"Error in /translate-pdf: {e}")
+        return jsonify({'error': f"Server error: {str(e)}"}), 500
 
 @app.route('/languages', methods=['GET'])
 def get_languages():
-    return jsonify(SUPPORTED_LANGUAGES)
+    return jsonify({
+        'hau_Latn': 'Hausa',
+        'yor_Latn': 'Yoruba',
+        'ibo_Latn': 'Igbo',
+        'swh_Latn': 'Swahili',
+        'kin_Latn': 'Kinyarwanda'
+    })
+
+@app.route('/speak', methods=['POST'])
+def speak():
+    data = request.get_json()
+    if not data or 'text' not in data or 'language_code' not in data:
+        return jsonify({'error': 'Missing "text" or "language_code"'}), 400
+
+    text = data['text']
+    language_code = data['language_code']
+
+    try:
+        audio_content = synthesize_speech(text, language_code)
+        audio_b64 = base64.b64encode(audio_content).decode('utf-8')
+        return jsonify({'audio_content': audio_b64})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # -----------------------------
-# Run the app
+# RUN APP
+
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
+
+
+
+
+
+
+
+
