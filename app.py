@@ -5,18 +5,41 @@ from flask_cors import CORS
 import PyPDF2
 from google.cloud import texttospeech
 import base64
+import os
+from dotenv import load_dotenv
+import traceback  # <-- added import
 
 # -----------------------------
 # CONFIGURATION
 
-GOOGLE_API_KEY = "AIzaSyCTuGy5wApbEazXrAcDv75waU7wCjGwfQs"
+load_dotenv()
 
+# Load Google API keys from .env
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+GOOGLE_APPLICATION_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+
+if GOOGLE_APPLICATION_CREDENTIALS:
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = GOOGLE_APPLICATION_CREDENTIALS
+else:
+    print("Warning: GOOGLE_APPLICATION_CREDENTIALS not set in .env")
+
+# Supported languages for translation and TTS
 SUPPORTED_LANGUAGES = {
     'hau_Latn': 'ha',  # Hausa
     'yor_Latn': 'yo',  # Yoruba
     'ibo_Latn': 'ig',  # Igbo
     'swh_Latn': 'sw',  # Swahili
     'kin_Latn': 'rw',  # Kinyarwanda
+}
+
+# Map short language codes to full Google TTS locale codes
+GOOGLE_TTS_LANG_CODES = {
+    'ha': 'ha-Latn-NG',
+    'yo': 'yo-NG',
+    'ig': 'ig-NG',
+    'sw': 'sw-KE',
+    'rw': 'rw-RW',
+    'en': 'en-US',
 }
 
 # -----------------------------
@@ -169,12 +192,16 @@ def speak():
     text = data['text']
     language_code = data['language_code']
 
+    # Map short language codes to full Google TTS codes
+    google_tts_lang_code = GOOGLE_TTS_LANG_CODES.get(language_code, "en-US")
+
     try:
-        audio_content = synthesize_speech(text, language_code)
+        audio_content = synthesize_speech(text, google_tts_lang_code)
         audio_b64 = base64.b64encode(audio_content).decode('utf-8')
         return jsonify({'audio_content': audio_b64})
 
     except Exception as e:
+        traceback.print_exc()  # <--- added full error print for debugging
         return jsonify({'error': str(e)}), 500
 
 # -----------------------------
@@ -182,11 +209,3 @@ def speak():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
-
-
-
-
-
-
-
-
