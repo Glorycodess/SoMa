@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reader - SoMa</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/global.css">
+  <link rel="stylesheet" href="/static/css/reader.css">
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-screen">
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <h1 class="brand-title">SoMa</h1>
+        <span class="brand-subtitle">African Language Translation</span>
+      </div>
+      <div class="nav-links">
+        <a href="/static/home.html" class="nav-link">Home</a>
+        <a href="/static/library.html" class="nav-link">Library</a>
+        <a href="/static/reader.html" class="nav-link active">Reader</a>
+        <a href="/static/settings.html" class="nav-link">Settings</a>
+      </div>
+      <div class="nav-theme">
+        <button id="lightTheme" class="theme-btn active">☀️</button>
+        <button id="darkTheme" class="theme-btn">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      <!-- Upload Section -->
+      <section class="upload-section">
+        <h2 class="section-title">Upload & Translate a Book</h2>
+        <div class="upload-grid">
+          <div class="upload-card">
+            <label class="upload-label">Select PDF File</label>
+            <div class="dropzone" id="dropzone">
+              <div class="dropzone-icon">📄</div>
+              <div class="dropzone-text">Drop PDF here or click to browse</div>
+              <div class="dropzone-subtext">Maximum file size: 50MB</div>
+              <button class="btn btn-outline" id="chooseFileBtn">Choose File</button>
+            </div>
+            <input type="file" id="fileInput" class="file-input" accept=".pdf" />
+            <div id="fileName" class="file-name" style="display: none;"></div>
+          </div>
+          
+          <div class="language-card">
+            <label class="upload-label">Select Target Language</label>
+            <select id="targetLanguage" class="language-select">
+              <option value="">Choose language...</option>
+              <option value="hau_Latn">🇳🇪 Hausa</option>
+              <option value="yor_Latn">🇳🇬 Yoruba</option>
+              <option value="ibo_Latn">🇳🇬 Igbo</option>
+              <option value="swh_Latn">🇹🇿 Swahili</option>
+              <option value="kin_Latn">🇷🇼 Kinyarwanda</option>
+              <option value="som_Latn">🇸🇴 Somali</option>
+              <option value="zul_Latn">🇿🇦 Zulu</option>
+              <option value="fra_Latn">🇫🇷 French</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="translate-actions">
+          <button id="translateBtn" class="btn btn-primary" disabled>
+            📚 Translate Book
+          </button>
+        </div>
+        
+        <div id="translationStatus" class="status-card" style="display: none;">
+          <div class="status-title">Translation Status</div>
+          <div class="status-text">Ready to translate. Upload a PDF and select a language to begin.</div>
+        </div>
+      </section>
+
+      <!-- Reader Controls -->
+      <section class="reader-controls">
+        <div class="controls-grid">
+          <!-- Reading Mode Controls -->
+          <div class="mode-controls">
+            <label class="control-label">Reading Mode</label>
+            <div class="mode-buttons">
+              <button id="inlineBtn" class="mode-btn active">Inline</button>
+              <button id="sideBySideBtn" class="mode-btn">Side-by-Side</button>
+              <button id="voiceTranslationBtn" class="mode-btn">Voice Translation</button>
+            </div>
+          </div>
+
+          <!-- Font Size Controls -->
+          <div class="display-controls">
+            <label class="control-label">Font Size</label>
+            <div class="font-controls">
+              <button id="decreaseFont" class="font-btn">A-</button>
+              <span id="fontSize" class="font-size">16</span>
+              <button id="increaseFont" class="font-btn">A+</button>
+            </div>
+          </div>
+
+          <!-- Voice Gender Controls -->
+          <div class="voice-controls">
+            <label class="control-label">Voice Gender</label>
+            <div class="gender-toggle">
+              <label class="gender-option">
+                <input type="radio" name="voiceGender" value="male" checked>
+                <span class="gender-label">👨 Male</span>
+              </label>
+              <label class="gender-option">
+                <input type="radio" name="voiceGender" value="female">
+                <span class="gender-label">👩 Female</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Audio Speed Controls -->
+          <div class="audio-controls">
+            <label class="control-label">Audio Speed</label>
+            <select id="audioSpeed" class="speed-select">
+              <option value="0.5">0.5x</option>
+              <option value="0.75">0.75x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Voice Translation Section -->
+      <section class="voice-translation-section">
+        <h3 class="section-title">Voice Translation</h3>
+        
+        <!-- Language Selection for Audio -->
+        <div class="audio-language-selection">
+          <label class="control-label">Select Language for Audio</label>
+          <select id="audioLanguage" class="language-select">
+            <option value="">Choose language...</option>
+            <option value="ha">🇳🇪 Hausa (ha)</option>
+            <option value="yo">🇳🇬 Yoruba (yo)</option>
+            <option value="ig">🇳🇬 Igbo (ig)</option>
+            <option value="sw">🇹🇿 Swahili (sw)</option>
+            <option value="rw">🇷🇼 Kinyarwanda (rw)</option>
+            <option value="so">🇸🇴 Somali (so)</option>
+            <option value="zu">🇿🇦 Zulu (zu)</option>
+            <option value="fr">🇫🇷 French (fr)</option>
+          </select>
+        </div>
+
+        <!-- Audio Controls -->
+        <div class="audio-controls-section">
+          <button id="playAudioBtn" class="btn btn-primary" disabled>
+            🔊 Play Audio
+          </button>
+          
+          <div id="audioPlayer" class="audio-player" style="display: none;">
+            <div class="player-controls">
+              <button id="playBtn" class="play-btn">
+                <span class="play-icon">▶️</span> Play
+              </button>
+              <button id="pauseBtn" class="pause-btn" style="display: none;">
+                <span class="pause-icon">⏸️</span> Pause
+              </button>
+              <button id="stopBtn" class="stop-btn">
+                <span class="stop-icon">⏹️</span> Stop
+              </button>
+            </div>
+            <div class="progress-container">
+              <div class="progress-bar" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+              <div class="time-display" id="timeDisplay">0:00 / 0:00</div>
+            </div>
+            <audio id="audioElement" style="display: none;"></audio>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reading Content -->
+      <section class="reading-content">
+        <!-- Inline Reading Mode -->
+        <div id="inlineMode" class="reading-mode active">
+          <div class="inline-text" id="inlineText">
+            <div class="sentence-blocks">
+              <p class="placeholder-text">Upload a book to start reading in your preferred language.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Side-by-Side Reading Mode -->
+        <div id="sideBySideMode" class="reading-mode">
+          <div class="side-by-side-container">
+            <div class="text-panel">
+              <div class="panel-header">
+                <h3 class="panel-title">📖 Original Text</h3>
+                <div class="panel-subtitle">English version</div>
+              </div>
+              <div class="panel-content" id="originalText">
+                <p class="placeholder-text">Original text will appear here.</p>
+              </div>
+            </div>
+            <div class="text-panel">
+              <div class="panel-header">
+                <h3 class="panel-title">🌍 Translated Text</h3>
+                <div class="panel-subtitle">Translated version</div>
+              </div>
+              <div class="panel-content" id="translatedText">
+                <p class="placeholder-text">Translated text will appear here.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Voice Translation Reading Mode -->
+        <div id="voiceTranslationMode" class="reading-mode">
+          <div class="voice-translation-content">
+            <div class="translated-text-display">
+              <h3 class="section-title">📚 Translated Text</h3>
+              <div class="text-content" id="voiceTranslationText">
+                <p class="placeholder-text">Upload a book to start reading in your preferred language.</p>
+              </div>
+            </div>
+            
+            <div class="audio-translation-controls">
+              <h3 class="section-title">🔊 Audio Translation</h3>
+              
+              <!-- Language Selection for Audio -->
+              <div class="audio-language-selection">
+                <label class="control-label">Select Language for Audio</label>
+                <select id="voiceAudioLanguage" class="language-select">
+                  <option value="">Choose language...</option>
+                  <option value="ha">🇳🇪 Hausa (ha)</option>
+                  <option value="yo">🇳🇬 Yoruba (yo)</option>
+                  <option value="ig">🇳🇬 Igbo (ig)</option>
+                  <option value="sw">🇹🇿 Swahili (sw)</option>
+                  <option value="rw">🇷🇼 Kinyarwanda (rw)</option>
+                  <option value="so">🇸🇴 Somali (so)</option>
+                  <option value="zu">🇿🇦 Zulu (zu)</option>
+                  <option value="fr">🇫🇷 French (fr)</option>
+                </select>
+              </div>
+
+              <!-- Voice Gender Selection -->
+              <div class="voice-gender-selection">
+                <label class="control-label">Voice Gender</label>
+                <div class="gender-toggle">
+                  <label class="gender-option">
+                    <input type="radio" name="voiceGenderAudio" value="male" checked>
+                    <span class="gender-label">👨 Male</span>
+                  </label>
+                  <label class="gender-option">
+                    <input type="radio" name="voiceGenderAudio" value="female">
+                    <span class="gender-label">👩 Female</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Audio Controls -->
+              <div class="audio-controls-section">
+                <button id="voicePlayAudioBtn" class="btn btn-primary" disabled>
+                  🔊 Play Audio Translation
+                </button>
+                
+                <div id="voiceAudioPlayer" class="audio-player" style="display: none;">
+                  <div class="player-controls">
+                    <button id="voicePlayBtn" class="play-btn">
+                      <span class="play-icon">▶️</span> Play
+                    </button>
+                    <button id="voicePauseBtn" class="pause-btn" style="display: none;">
+                      <span class="pause-icon">⏸️</span> Pause
+                    </button>
+                    <button id="voiceStopBtn" class="stop-btn">
+                      <span class="stop-icon">⏹️</span> Stop
+                    </button>
+                  </div>
+                  <div class="progress-container">
+                    <div class="progress-bar" id="voiceProgressBar">
+                      <div class="progress-fill" id="voiceProgressFill"></div>
+                    </div>
+                    <div class="time-display" id="voiceTimeDisplay">0:00 / 0:00</div>
+                  </div>
+                  <audio id="voiceAudioElement" style="display: none;"></audio>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="/static/js/global.js"></script>
+  <script src="/static/js/reader.js"></script>
+</body>
+</html> 

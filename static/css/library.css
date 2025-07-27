@@ -1,0 +1,393 @@
+/* ===== LIBRARY PAGE STYLES ===== */
+
+/* Upload Section */
+.upload-section {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 3rem;
+}
+
+.dark-theme .upload-section {
+  background: rgba(26, 26, 46, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.upload-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .upload-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.upload-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.upload-label {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.dark-theme .upload-label {
+  color: #e0e0e0;
+}
+
+/* Dropzone */
+.dropzone {
+  border: 2px dashed #d1d5db;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.dropzone:hover {
+  border-color: #4f46e5;
+  background: rgba(79, 70, 229, 0.05);
+}
+
+.dropzone.dragover {
+  border-color: #4f46e5;
+  background: rgba(79, 70, 229, 0.1);
+}
+
+.dark-theme .dropzone {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark-theme .dropzone:hover {
+  border-color: #818cf8;
+  background: rgba(129, 140, 248, 0.1);
+}
+
+.dropzone-icon {
+  width: 3rem;
+  height: 3rem;
+  color: #9ca3af;
+  margin-bottom: 1rem;
+}
+
+.dropzone-text {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.dark-theme .dropzone-text {
+  color: #e0e0e0;
+}
+
+.dropzone-subtext {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.dark-theme .dropzone-subtext {
+  color: #9ca3af;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-name {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #4f46e5;
+  font-weight: 500;
+}
+
+.dark-theme .file-name {
+  color: #818cf8;
+}
+
+/* Language Selection */
+.language-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.language-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.language-select:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.dark-theme .language-select {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #e0e0e0;
+}
+
+.dark-theme .language-select:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+}
+
+/* Status Card */
+.status-card {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(79, 70, 229, 0.1);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(79, 70, 229, 0.2);
+}
+
+.dark-theme .status-card {
+  background: rgba(129, 140, 248, 0.1);
+  border-color: rgba(129, 140, 248, 0.2);
+}
+
+.status-title {
+  font-weight: 600;
+  color: #4f46e5;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.dark-theme .status-title {
+  color: #818cf8;
+}
+
+.status-text {
+  color: #4f46e5;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.dark-theme .status-text {
+  color: #818cf8;
+}
+
+/* Translate Actions */
+.translate-actions {
+  text-align: center;
+}
+
+/* Books Section */
+.books-section {
+  margin-top: 3rem;
+}
+
+.books-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.books-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.sort-select {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: white;
+  font-size: 0.875rem;
+}
+
+.dark-theme .sort-select {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #e0e0e0;
+}
+
+/* Books Grid */
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .books-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.book-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.book-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme .book-card {
+  background: rgba(26, 26, 46, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.book-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.book-title {
+  font-weight: 600;
+  color: #111827;
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+.dark-theme .book-title {
+  color: #f9fafb;
+}
+
+.book-language {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+.dark-theme .book-language {
+  color: #9ca3af;
+}
+
+.book-progress {
+  margin-bottom: 1.5rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 0.5rem;
+  background: #e5e7eb;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.dark-theme .progress-bar {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+  border-radius: 0.25rem;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.dark-theme .progress-text {
+  color: #9ca3af;
+}
+
+.book-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.book-actions .btn {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #6b7280;
+}
+
+.dark-theme .empty-state {
+  color: #9ca3af;
+}
+
+.empty-icon {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1.5rem;
+  color: #d1d5db;
+}
+
+.dark-theme .empty-icon {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.empty-state h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #374151;
+}
+
+.dark-theme .empty-state h3 {
+  color: #e0e0e0;
+}
+
+.empty-state p {
+  color: #6b7280;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.dark-theme .empty-state p {
+  color: #9ca3af;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .upload-section {
+    padding: 1.5rem;
+  }
+  
+  .books-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .books-controls {
+    justify-content: center;
+  }
+  
+  .book-actions {
+    flex-direction: column;
+  }
+} 

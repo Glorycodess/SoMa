@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings - SoMa</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/global.css">
+  <link rel="stylesheet" href="/static/css/settings.css">
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-screen">
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <h1 class="brand-title">SoMa</h1>
+        <span class="brand-subtitle">African Language Translation</span>
+      </div>
+      <div class="nav-links">
+        <a href="/static/home.html" class="nav-link">Home</a>
+        <a href="/static/library.html" class="nav-link">Library</a>
+        <a href="/static/reader.html" class="nav-link">Reader</a>
+        <a href="/static/settings.html" class="nav-link active">Settings</a>
+      </div>
+      <div class="nav-theme">
+        <button id="lightTheme" class="theme-btn active">Light</button>
+        <button id="darkTheme" class="theme-btn">Dark</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="container">
+      <h1 class="page-title">Settings</h1>
+      
+      <!-- Theme Settings -->
+      <section class="settings-section">
+        <h2 class="section-title">Appearance</h2>
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Theme</h3>
+            <p>Choose between light and dark themes for comfortable reading</p>
+          </div>
+          <div class="setting-control">
+            <div class="theme-toggle">
+              <button id="lightThemeBtn" class="theme-option active">Light</button>
+              <button id="darkThemeBtn" class="theme-option">Dark</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reading Preferences -->
+      <section class="settings-section">
+        <h2 class="section-title">Reading Preferences</h2>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Default Font Size</h3>
+            <p>Set your preferred text size for reading</p>
+          </div>
+          <div class="setting-control">
+            <div class="font-size-control">
+              <button id="decreaseFontSize" class="font-btn">A-</button>
+              <span id="currentFontSize" class="font-size-display">16</span>
+              <button id="increaseFontSize" class="font-btn">A+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Default Reading Mode</h3>
+            <p>Choose your preferred reading mode</p>
+          </div>
+          <div class="setting-control">
+            <select id="defaultReadingMode" class="mode-select">
+              <option value="inline">Inline</option>
+              <option value="sideBySide">Side by Side</option>
+              <option value="audio">Audio</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Audio Speed</h3>
+            <p>Set default playback speed for audio reading</p>
+          </div>
+          <div class="setting-control">
+            <select id="defaultAudioSpeed" class="speed-select">
+              <option value="0.5">0.5x</option>
+              <option value="0.75">0.75x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Language Preferences -->
+      <section class="settings-section">
+        <h2 class="section-title">Language Preferences</h2>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Preferred Language</h3>
+            <p>Set your default target language for translations</p>
+          </div>
+          <div class="setting-control">
+            <select id="preferredLanguage" class="language-select">
+              <option value="">Select language</option>
+              <option value="hau_Latn">🇳🇬 Hausa (Nigeria)</option>
+              <option value="yor_Latn">🇳🇬 Yoruba (Nigeria)</option>
+              <option value="ibo_Latn">🇳🇬 Igbo (Nigeria)</option>
+              <option value="swh_Latn">🇹🇿 Swahili (East Africa)</option>
+              <option value="kin_Latn">🇷🇼 Kinyarwanda (Rwanda)</option>
+              <option value="som_Latn">🇸🇴 Somali (Somalia)</option>
+              <option value="zul_Latn">🇿🇦 Zulu (South Africa)</option>
+              <option value="fra_Latn">🇫🇷 French (France)</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Data Management -->
+      <section class="settings-section">
+        <h2 class="section-title">Data Management</h2>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Clear All Data</h3>
+            <p>Remove all saved books, preferences, and reading progress</p>
+          </div>
+          <div class="setting-control">
+            <button id="clearDataBtn" class="btn btn-danger">Clear All Data</button>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Export Settings</h3>
+            <p>Download your preferences and reading progress</p>
+          </div>
+          <div class="setting-control">
+            <button id="exportSettingsBtn" class="btn btn-secondary">Export</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Upcoming Features -->
+      <section class="settings-section">
+        <h2 class="section-title">Upcoming Features</h2>
+        
+        <div class="upcoming-features">
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </div>
+            <div class="feature-info">
+              <h3>User Accounts</h3>
+              <p>Sync your books and preferences across devices</p>
+              <span class="feature-status">Coming Soon</span>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+              </svg>
+            </div>
+            <div class="feature-info">
+              <h3>Offline Reading</h3>
+              <p>Download books for offline access</p>
+              <span class="feature-status">Coming Soon</span>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+            </div>
+            <div class="feature-info">
+              <h3>Advanced Notes</h3>
+              <p>Rich text notes and annotations</p>
+              <span class="feature-status">Coming Soon</span>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+            </div>
+            <div class="feature-info">
+              <h3>Reading Analytics</h3>
+              <p>Track your reading progress and habits</p>
+              <span class="feature-status">Coming Soon</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section class="settings-section">
+        <h2 class="section-title">About SoMa</h2>
+        
+        <div class="about-content">
+          <div class="about-item">
+            <h3>Version</h3>
+            <p>1.0.0</p>
+          </div>
+          
+          <div class="about-item">
+            <h3>Description</h3>
+            <p>SoMa is an African language book translation platform that helps readers access literature in their native languages.</p>
+          </div>
+          
+          <div class="about-item">
+            <h3>Contact</h3>
+            <p>contact@soma.app</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="/static/js/global.js"></script>
+  <script src="/static/js/settings.js"></script>
+</body>
+</html> 

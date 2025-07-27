@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Library - SoMa</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/global.css">
+  <link rel="stylesheet" href="/static/css/library.css">
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-screen">
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <h1 class="brand-title">SoMa</h1>
+        <span class="brand-subtitle">African Language Translation</span>
+      </div>
+      <div class="nav-links">
+        <a href="/static/home.html" class="nav-link">Home</a>
+        <a href="/static/library.html" class="nav-link active">Library</a>
+        <a href="/static/reader.html" class="nav-link">Reader</a>
+        <a href="/static/settings.html" class="nav-link">Settings</a>
+      </div>
+      <div class="nav-theme">
+        <button id="lightTheme" class="theme-btn active">Light</button>
+        <button id="darkTheme" class="theme-btn">Dark</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="container">
+      <!-- Upload Section -->
+      <section class="upload-section">
+        <h2 class="section-title">Upload & Translate a Book</h2>
+        
+        <div class="upload-grid">
+          <!-- File Upload -->
+          <div class="upload-card">
+            <label class="upload-label">Upload PDF Book</label>
+            <div id="dropzone" class="dropzone">
+              <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+              </svg>
+              <p class="dropzone-text">Drop your PDF here or click to browse</p>
+              <p class="dropzone-subtext">Support for PDF files up to 50MB</p>
+              <input id="fileInput" type="file" accept=".pdf" class="file-input" />
+              <button type="button" id="chooseFileBtn" class="btn btn-outline">Choose File</button>
+              <div id="fileName" class="file-name"></div>
+            </div>
+          </div>
+
+          <!-- Language Selection -->
+          <div class="language-card">
+            <label for="targetLanguage" class="upload-label">Target Language</label>
+            <select id="targetLanguage" class="language-select">
+              <option value="">Select language</option>
+              <option value="hau_Latn">🇳🇬 Hausa (Nigeria)</option>
+              <option value="yor_Latn">🇳🇬 Yoruba (Nigeria)</option>
+              <option value="ibo_Latn">🇳🇬 Igbo (Nigeria)</option>
+              <option value="swh_Latn">🇹🇿 Swahili (East Africa)</option>
+              <option value="kin_Latn">🇷🇼 Kinyarwanda (Rwanda)</option>
+              <option value="som_Latn">🇸🇴 Somali (Somalia)</option>
+              <option value="zul_Latn">🇿🇦 Zulu (South Africa)</option>
+              <option value="fra_Latn">🇫🇷 French (France)</option>
+            </select>
+            
+            <div class="status-card">
+              <h4 class="status-title">Translation Status</h4>
+              <div id="translationStatus" class="status-text">
+                Ready to translate. Upload a PDF and select a language to begin.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Translate Button -->
+        <div class="translate-actions">
+          <button id="translateBtn" class="btn btn-primary" disabled>
+            📚 Translate Book
+          </button>
+        </div>
+      </section>
+
+      <!-- Books Section -->
+      <section class="books-section">
+        <div class="books-header">
+          <h2 class="section-title">Your Books</h2>
+          <div class="books-controls">
+            <select id="sortSelect" class="sort-select">
+              <option value="recent">Recently Added</option>
+              <option value="title">Title A-Z</option>
+              <option value="language">Language</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="booksList" class="books-grid">
+          <!-- Books will be loaded here dynamically -->
+        </div>
+
+        <div id="emptyState" class="empty-state hidden">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+          </div>
+          <h3>No books yet</h3>
+          <p>Upload your first book to get started with reading in your native language.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="/static/js/global.js"></script>
+  <script src="/static/js/library.js"></script>
+</body>
+</html> 

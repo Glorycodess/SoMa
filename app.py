@@ -30,6 +30,9 @@ SUPPORTED_LANGUAGES = {
     'ibo_Latn': 'ig',  # Igbo
     'swh_Latn': 'sw',  # Swahili
     'kin_Latn': 'rw',  # Kinyarwanda
+    'som_Latn': 'so',  # Somali - NEW: Added support for Somali language
+    'zul_Latn': 'zu',  # Zulu - NEW: Added support for Zulu language
+    'fra_Latn': 'fr',  # French - NEW: Added support for French language
 }
 
 # Map short language codes to full Google TTS locale codes
@@ -39,6 +42,9 @@ GOOGLE_TTS_LANG_CODES = {
     'ig': 'ig-NG',
     'sw': 'sw-KE',
     'rw': 'rw-RW',
+    'so': 'so-SO',  # Somali TTS locale
+    'zu': 'zu-ZA',  # Zulu TTS locale
+    'fr': 'fr-FR',  # French TTS locale
     'en': 'en-US',
 }
 
@@ -91,14 +97,75 @@ def extract_text_from_pdf(file_stream):
             text += page_text + '\n'
     return text.strip()
 
-def synthesize_speech(text, language_code="en-US"):
+def get_compatible_voice(client, language_code, voice_gender='male'):
+    """
+    Get a compatible voice for the given language code and gender.
+    Falls back to a default voice if no specific voice is found.
+    """
+    try:
+        # List all available voices
+        voices = client.list_voices()
+        
+        # Map gender to SSML gender
+        ssml_gender = texttospeech.SsmlVoiceGender.MALE if voice_gender == 'male' else texttospeech.SsmlVoiceGender.FEMALE
+        
+        # Find voices that match the language code and gender
+        compatible_voices = []
+        for voice in voices.voices:
+            for language in voice.languages:
+                if language.language_code == language_code:
+                    # Check if voice supports the desired gender
+                    if hasattr(voice, 'ssml_gender'):
+                        if voice.ssml_gender == ssml_gender:
+                            compatible_voices.append(voice)
+                    else:
+                        # If no gender specified, include the voice
+                        compatible_voices.append(voice)
+        
+        # If we found compatible voices, use the first one
+        if compatible_voices:
+            return texttospeech.VoiceSelectionParams(
+                language_code=language_code,
+                name=compatible_voices[0].name,
+                ssml_gender=ssml_gender
+            )
+        
+        # Fallback: try to find any voice with the language code
+        for voice in voices.voices:
+            for language in voice.languages:
+                if language.language_code.startswith(language_code.split('-')[0]):
+                    return texttospeech.VoiceSelectionParams(
+                        language_code=language_code,
+                        name=voice.name,
+                        ssml_gender=ssml_gender
+                    )
+        
+        # Final fallback: use a default voice
+        default_voice_name = 'en-US-Wavenet-D' if voice_gender == 'male' else 'en-US-Wavenet-F'
+        return texttospeech.VoiceSelectionParams(
+            language_code=language_code,
+            name=default_voice_name,
+            ssml_gender=ssml_gender
+        )
+        
+    except Exception as e:
+        print(f"Error getting compatible voice: {e}")
+        # Fallback to default voice
+        default_voice_name = 'en-US-Wavenet-D' if voice_gender == 'male' else 'en-US-Wavenet-F'
+        return texttospeech.VoiceSelectionParams(
+            language_code=language_code,
+            name=default_voice_name,
+            ssml_gender=ssml_gender
+        )
+
+def synthesize_speech(text, language_code="en-US", voice_gender='male'):
     client = texttospeech.TextToSpeechClient()
 
     input_text = texttospeech.SynthesisInput(text=text)
-    voice = texttospeech.VoiceSelectionParams(
-        language_code=language_code,
-        ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
-    )
+    
+    # Get a compatible voice for the language and gender
+    voice = get_compatible_voice(client, language_code, voice_gender)
+    
     audio_config = texttospeech.AudioConfig(
         audio_encoding=texttospeech.AudioEncoding.MP3
     )
@@ -121,7 +188,7 @@ CORS(app)
 
 @app.route('/')
 def serve_index():
-    return send_from_directory(app.static_folder, 'index.html')
+    return send_from_directory(app.static_folder, 'home.html')
 
 @app.route('/translate', methods=['POST'])
 def translate_api():
@@ -139,7 +206,11 @@ def translate_api():
     try:
         translated = translate_text(text, target_language_code)
         cleaned = clean_translated_text(translated)
-        return jsonify({'translated_text': cleaned, 'target_language': lang_input})
+        return jsonify({
+            'translated_text': cleaned, 
+            'original_text': text,  # Return the original text
+            'target_language': lang_input
+        })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -162,12 +233,20 @@ def translate_pdf():
 
         extracted_text = extract_text_from_pdf(file.stream)
         if not extracted_text:
-            return jsonify({'translated_text': '[No text found in PDF]', 'target_language': target_language})
+            return jsonify({
+                'translated_text': '[No text found in PDF]', 
+                'original_text': '[No text found in PDF]',  # FIXED: Return original text for side-by-side view
+                'target_language': target_language
+            })
 
         translated_text = translate_text(extracted_text, target_language_code)
         cleaned_text = clean_translated_text(translated_text)
 
-        return jsonify({'translated_text': cleaned_text, 'target_language': target_language})
+        return jsonify({
+            'translated_text': cleaned_text,
+            'original_text': extracted_text,  # FIXED: Return the original extracted text for comparison
+            'target_language': target_language
+        })
 
     except Exception as e:
         print(f"Error in /translate-pdf: {e}")
@@ -180,7 +259,10 @@ def get_languages():
         'yor_Latn': 'Yoruba',
         'ibo_Latn': 'Igbo',
         'swh_Latn': 'Swahili',
-        'kin_Latn': 'Kinyarwanda'
+        'kin_Latn': 'Kinyarwanda',
+        'som_Latn': 'Somali',
+        'zul_Latn': 'Zulu',
+        'fra_Latn': 'French'
     })
 
 @app.route('/speak', methods=['POST'])
@@ -191,12 +273,13 @@ def speak():
 
     text = data['text']
     language_code = data['language_code']
+    voice_gender = data.get('voice_gender', 'male')  # Default to male if not specified
 
     # Map short language codes to full Google TTS codes
     google_tts_lang_code = GOOGLE_TTS_LANG_CODES.get(language_code, "en-US")
 
     try:
-        audio_content = synthesize_speech(text, google_tts_lang_code)
+        audio_content = synthesize_speech(text, google_tts_lang_code, voice_gender)
         audio_b64 = base64.b64encode(audio_content).decode('utf-8')
         return jsonify({'audio_content': audio_b64})
 

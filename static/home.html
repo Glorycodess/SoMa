@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SoMa - African Language Book Translation</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/global.css">
+  <link rel="stylesheet" href="/static/css/home.css">
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-screen">
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <h1 class="brand-title">SoMa</h1>
+        <span class="brand-subtitle">African Language Translation</span>
+      </div>
+      <div class="nav-links">
+        <a href="/static/home.html" class="nav-link active">Home</a>
+        <a href="/static/library.html" class="nav-link">Library</a>
+        <a href="/static/reader.html" class="nav-link">Reader</a>
+        <a href="/static/settings.html" class="nav-link">Settings</a>
+      </div>
+      <div class="nav-theme">
+        <button id="lightTheme" class="theme-btn active">Light</button>
+        <button id="darkTheme" class="theme-btn">Dark</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-container">
+      <h1 class="hero-title">
+        Read and listen to books in your native African language
+      </h1>
+      <p class="hero-subtitle">
+        Upload your favorite books and read them in Hausa, Yoruba, Swahili, and more. 
+        Experience literature in your native language with our advanced translation platform.
+      </p>
+      <div class="hero-actions">
+        <a href="/static/library.html" class="btn btn-primary">
+          📚 Start Reading
+        </a>
+        <a href="/static/reader.html" class="btn btn-secondary">
+          ✨ Try Reader
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="container">
+      <h2 class="section-title">Why Choose SoMa?</h2>
+      <p class="section-subtitle">
+        Experience the future of multilingual reading with our comprehensive translation platform
+      </p>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <h3>PDF Upload</h3>
+          <p>Upload any PDF book for instant translation</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+            </svg>
+          </div>
+          <h3>Side-by-side Reading</h3>
+          <p>Compare original and translated text side by side</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+            </svg>
+          </div>
+          <h3>Audio Reading</h3>
+          <p>Listen to translated text with natural voice synthesis</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <h3>Inline Reading</h3>
+          <p>Read with translated text inline for better flow</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+          </div>
+          <h3>Highlight & Notes</h3>
+          <p>Save highlights and notes as you read</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+          </div>
+          <h3>Dark Mode</h3>
+          <p>Comfortable reading in light or dark themes</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Supported Languages -->
+  <section class="languages">
+    <div class="container">
+      <h2 class="section-title">Supported Languages</h2>
+      <div class="languages-grid">
+        <div class="language-card">
+          <span class="flag">🇳🇬</span>
+          <h3>Hausa</h3>
+          <p>Nigeria, Niger, Ghana</p>
+        </div>
+        <div class="language-card">
+          <span class="flag">🇳🇬</span>
+          <h3>Yoruba</h3>
+          <p>Nigeria, Benin, Togo</p>
+        </div>
+        <div class="language-card">
+          <span class="flag">🇳🇬</span>
+          <h3>Igbo</h3>
+          <p>Nigeria</p>
+        </div>
+        <div class="language-card">
+          <span class="flag">🇹🇿</span>
+          <h3>Swahili</h3>
+          <p>East Africa</p>
+        </div>
+        <div class="language-card">
+          <span class="flag">🇷🇼</span>
+          <h3>Kinyarwanda</h3>
+          <p>Rwanda</p>
+        </div>
+        <div class="language-card">
+          <span class="flag">🇸🇴</span>
+          <h3>Somali</h3>
+          <p>Somalia, Ethiopia, Kenya</p>
+        </div>
+        <div class="language-card">
+          <span class="flag">🇿🇦</span>
+          <h3>Zulu</h3>
+          <p>South Africa</p>
+        </div>
+        <div class="language-card">
+          <span class="flag">🇫🇷</span>
+          <h3>French</h3>
+          <p>France, Africa</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>SoMa</h3>
+          <p>African Language Book Translation Platform</p>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <a href="/static/library.html">Library</a>
+          <a href="/static/reader.html">Reader</a>
+          <a href="/static/settings.html">Settings</a>
+        </div>
+        <div class="footer-section">
+          <h4>Contact</h4>
+          <p>contact@soma.app</p>
+          <p>+234 123 456 789</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 SoMa. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/global.js"></script>
+  <script src="/static/js/home.js"></script>
+</body>
+</html> 
