@@ -17,4 +17,4 @@ __pycache__/
 .vscode/
 
 # Node stuff (if using npm anywhere)
-node_modules/
+node_modules/secrets/*.json
