@@ -1,8 +1,8 @@
-Flask
-flask-cors
-transformers
-torch
-PyPDF2
-requests
-google-cloud-texttospeech
-python-dotenv
+Flask==3.1.1
+flask-cors==6.0.1
+transformers==4.53.1
+torch==2.7.1
+PyPDF2==3.0.1
+requests==2.32.4
+google-cloud-texttospeech==2.27.0
+python-dotenv==1.0.0
