@@ -16,12 +16,8 @@ load_dotenv()
 
 # Load Google API keys from .env
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-GOOGLE_APPLICATION_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
-
-if GOOGLE_APPLICATION_CREDENTIALS:
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = GOOGLE_APPLICATION_CREDENTIALS
-else:
-    print("Warning: GOOGLE_APPLICATION_CREDENTIALS not set in .env")
+# Set the path to your Render secret file (Google service account key)
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/etc/secrets/google-tts-key.json"
 
 # Supported languages for translation and TTS
 SUPPORTED_LANGUAGES = {
