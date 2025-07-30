@@ -283,6 +283,10 @@ def speak():
         traceback.print_exc()  # <--- added full error print for debugging
         return jsonify({'error': str(e)}), 500
 
+# Ping route to keep the server awake
+@app.route('/ping', methods=['GET'])
+def ping():
+    return jsonify({'message': 'pong'}), 200
 # -----------------------------
 # RUN APP
 
